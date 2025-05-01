@@ -13,7 +13,7 @@ const flash = require('connect-flash');
 
 // Importações internas (rotas e middlewares personalizados)
 const routes = require('./routes');
-const { middlewareGlobal, checkCrsfError, csrfMiddleware } = require('./src/middlewares/middlleware');
+const { middlewareMessages, checkCrsfError, csrfMiddleware } = require('./src/middlewares/middlleware');
 
 // Inicialização do Express
 const app = express();
@@ -40,7 +40,7 @@ app.use(helmet());
 
 // Configuração de sessão
 const sessionOptions = session({
-	secret: 'alexsander wallace da silva andrade', // Chave secreta da sessão (ideal esconder no .env)
+	secret: 'aula_criando_agenda_de_contatos', // Chave secreta da sessão (ideal esconder no .env)
 	store: MongoStore.create({ mongoUrl: process.env.CONNECTIONSTRING }), // Armazena sessões no MongoDB
 	resave: false,
 	saveUninitialized: false,
@@ -62,7 +62,7 @@ app.set('view engine', 'ejs');
 app.use(csrf());
 
 // Middlewares personalizados
-//app.use(middlewareGlobal); // Middleware global (disponibiliza dados em todas as views)
+app.use(middlewareMessages); // Middleware de mensagens de erro ou sucesso (disponibiliza dados em todas as views)
 app.use(checkCrsfError); // Lida com erros CSRF
 app.use(csrfMiddleware); // Injeta token CSRF nas views
 
