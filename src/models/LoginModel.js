@@ -32,17 +32,31 @@ class Login {
 		//Trava o código se tiver erros no array de this.errors
 		if (this.errors.length > 0) return;
 
-		try {
-			//Criptografando a senha
-			const salt = bcryptjs.genSaltSync();
-			this.body.password = bcryptjs.hashSync(this.body.password, salt);
+		//Verifica se o usuário já está cadastrado no banco de dados
+		await this.userExists();
 
+		//Trava o código se tiver erros no array de this.errors
+		if (this.errors.length > 0) return;
+
+		//"Criptografando" a senha
+		const salt = bcryptjs.genSaltSync();
+		this.body.password = bcryptjs.hashSync(this.body.password, salt);
+
+		try {
 			//Cria o objeto na base de dados
 			//O objeto pode ser acessado pelo this.user (fora da função)
 			this.user = await LoginModel.create(this.body);
 		} catch (e) {
 			console.log(e);
 		}
+	}
+
+	//Verifica se o usuario já está cadastrado no banco de dados pelo email
+	//Se ja estiver cadastrado retorna o email
+	//Se não estiver cadastrado retorna null
+	async userExists() {
+		const testUser = await LoginModel.findOne({ email: this.body.email });
+		if (testUser) this.errors.push('O usuário já está cadastrado.');
 	}
 
 	//Realiza validações
