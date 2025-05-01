@@ -42,26 +42,27 @@
         "webpack-cli": "^6.0.1"
     }
 
-## Instale e configure o webpack
+- Instale e configure o webpack
 
-## Instale e configure o Express
+- Instale e configure o Express
 
-## Instale e configure eslint e o prettier
+- Instale e configure eslint e o prettier
 
-## Crie a estrutura do projeto
+- Crie a estrutura do projeto
 
-## Criando a pagina inicial(Home)
+- Criando a pagina inicial(Home)
 
     - Crie a pasta views dentro e src e dentro dela crie a pasta includes
 
     - Crie um arquivo chamado index.ejs
+
         - Ele será a pagina home do projeto
         - Separe a head e o footer a pagina em outros arquivos com os mesmo nomes e os coloque na pasta includes.
         - Em sequidda os importe na sua home
 
-          <%- include('includes/head')%>
+            <%- include('includes/head')%>
 
-          <%- include('includes/footer')%>
+            <%- include('includes/footer')%>
 
     - Crie a rota para a página em routes.js
 
@@ -73,10 +74,47 @@
     - Crie a requisição para renderizar a página
 
         exports.index = (req, res) => {
-            res.render('index');
-            return;
+        res.render('index');
+        return;
         };
 
     - Salve o projeto
 
 ## Criando a seção de login e registro do usuário
+
+    - Crie o layout da página
+        - Crie o arquivo login.ejs
+        - A página deve conter o formulário de cadastro e o formulário de login lado a lado
+        - Os campos de inputs devem ser de email e password
+            Rota -> action="/login/register"
+            Disparo -> method="POST"
+        - Adicione tbm o o csrfToken
+            <input type="hidden" name="_csrf" value=<%= csrfToken%> />
+
+    - Crie a rota em routes.js
+
+        route.get('/login', loginController.index);
+
+    - Crie o controller para renderizar a página
+
+        exports.index = (req, res) => {
+            res.render('login');
+        };
+
+    - Agora vamos criar as funcionalidades
+
+## Criando o model do usuário e enviando para o banco de dados
+
+    - Crie o arquivo LoginModel.js em models
+
+        - Crie o schema do os campos email e password
+            Os campos deve ser obrigatórios
+            O tipo é string
+
+        -  Crie o model pelo mongoose
+            ex: const LoginModel = mongoose.model('Login', LoginSchema);
+
+## Criando a classe para manipular os dados que vao ser enviados para o servidor
+
+    - A classe vai manipular os dados e fazer validações
+    - Os dados devem ser mandados para o servidor sem erros

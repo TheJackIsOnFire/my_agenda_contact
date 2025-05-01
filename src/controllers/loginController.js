@@ -12,7 +12,7 @@ exports.register = async (req, res) => {
 		if (login.errors.length > 0) {
 			req.flash('messagesErrors', login.errors);
 			req.session.save(() => {
-				//console.log(`Mensagens de errors -> ${login.errors}`);
+				console.log(`Mensagens de errors -> ${login.errors}`);
 				return res.redirect('../login');
 			});
 			return;

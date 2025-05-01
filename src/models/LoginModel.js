@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcryptjs = require('bcryptjs');
 
 // Define um novo schema (estrutura) para o modelo de login usando Mongoose
 const LoginSchema = new mongoose.Schema({
@@ -32,6 +33,10 @@ class Login {
 		if (this.errors.length > 0) return;
 
 		try {
+			//Criptografando a senha
+			const salt = bcryptjs.genSaltSync();
+			this.body.password = bcryptjs.hashSync(this.body.password, salt);
+
 			//Cria o objeto na base de dados
 			//O objeto pode ser acessado pelo this.user (fora da função)
 			this.user = await LoginModel.create(this.body);
