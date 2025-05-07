@@ -22,6 +22,28 @@ class Login {
 		this.user = null;
 	}
 
+	//Logando usuário
+	async loginUser() {
+		//Chama a função que faz a validação
+		this.isValid();
+
+		//Trava o código se tiver erros no array de this.errors
+		if (this.errors.length > 0) return;
+
+		this.user = await LoginModel.findOne({ email: this.body.email });
+
+		if (!this.user) {
+			this.errors.push('O usuário não existe.');
+			return;
+		}
+
+		if (!bcryptjs.compareSync(this.body.password, this.user.password)) {
+			this.errors.push('Senha invalida.');
+			this.user = null;
+			return;
+		}
+	}
+
 	//Registra o usuário na base de dados o após as validações
 	//Quando trabalhamos com a base de dados usamos funções assincronas
 	//A função sempre retorna uma promisse
@@ -42,21 +64,17 @@ class Login {
 		const salt = bcryptjs.genSaltSync();
 		this.body.password = bcryptjs.hashSync(this.body.password, salt);
 
-		try {
-			//Cria o objeto na base de dados
-			//O objeto pode ser acessado pelo this.user (fora da função)
-			this.user = await LoginModel.create(this.body);
-		} catch (e) {
-			console.log(e);
-		}
+		//Cria o objeto na base de dados
+		//O objeto pode ser acessado pelo this.user (fora da função)
+		this.user = await LoginModel.create(this.body);
 	}
 
 	//Verifica se o usuario já está cadastrado no banco de dados pelo email
 	//Se ja estiver cadastrado retorna o email
 	//Se não estiver cadastrado retorna null
 	async userExists() {
-		const testUser = await LoginModel.findOne({ email: this.body.email });
-		if (testUser) this.errors.push('O usuário já está cadastrado.');
+		this.user = await LoginModel.findOne({ email: this.body.email });
+		if (this.user) this.errors.push('O usuário já está cadastrado.');
 	}
 
 	//Realiza validações
