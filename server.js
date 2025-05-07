@@ -13,7 +13,12 @@ const flash = require('connect-flash');
 
 // Importações internas (rotas e middlewares personalizados)
 const routes = require('./routes');
-const { middlewareMessages, checkCrsfError, csrfMiddleware } = require('./src/middlewares/middlleware');
+const {
+	middlewareMessages,
+	checkCrsfError,
+	csrfMiddleware,
+	middlewareSession,
+} = require('./src/middlewares/middlleware');
 
 // Inicialização do Express
 const app = express();
@@ -65,6 +70,7 @@ app.use(csrf());
 app.use(middlewareMessages); // Middleware de mensagens de erro ou sucesso (disponibiliza dados em todas as views)
 app.use(checkCrsfError); // Lida com erros CSRF
 app.use(csrfMiddleware); // Injeta token CSRF nas views
+app.use(middlewareSession);
 
 // Rotas da aplicação
 app.use(routes);

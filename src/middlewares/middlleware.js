@@ -16,3 +16,8 @@ exports.middlewareMessages = (req, res, next) => {
 	res.locals.msgSuccess = req.flash('messagesSuccess');
 	next();
 };
+
+exports.middlewareSession = (req, res, next) => {
+	res.locals.user = req.session.user;
+	next();
+};
