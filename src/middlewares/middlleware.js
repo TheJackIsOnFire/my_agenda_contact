@@ -21,3 +21,12 @@ exports.middlewareSession = (req, res, next) => {
 	res.locals.user = req.session.user;
 	next();
 };
+
+exports.loginRequired = (req, res, next) => {
+	if (!req.session.user) {
+		req.flash('messagesErrors', 'Voce precisa estar logado para cadastrar contatos.');
+		req.session.save(() => res.redirect('/'));
+		return;
+	}
+	next();
+};
