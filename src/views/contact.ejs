@@ -9,10 +9,13 @@
             <div class="col-lg-8 my-3">
                 <h1 class="display-1 text-center">Contato</h1>
                 <p class="text-center lead">Crie ou edite seu contato abaixo.</p>
-            </div>
-            
+            </div>            
             <%- include('includes/messages')%>
-
+            <% if(contactDb._id) {%>
+                <form action="/contact/edit/<%= contactDb._id%>" method="POST">
+            <% } else {%>
+                <form action="/contact/register" method="POST">
+            <% } %>
             <form action="/contact/register" method="POST">
 				<input type="hidden" name="_csrf" value=<%= csrfToken%> />
 				<div class="form-group my-3">
@@ -31,7 +34,11 @@
 					<label class="my-1">Telefone</label>
 					<input value="<%= contactDb.telephone %>"  type="tel" class="form-control" name="telephone" placeholder="telefone" />
 				</div>
-                <button type="submit" class="btn btn-primary">Adicionar contato</button>
+                <% if(contactDb._id) {%>
+                        <button type="submit" class="btn btn-primary">Editar contato</button>
+                <% } else {%>
+                        <button type="submit" class="btn btn-primary">Adicionar contato</button>
+                <% } %>
 			</form>
         </div>
     </div>
