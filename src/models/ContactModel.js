@@ -18,6 +18,16 @@ class Contact {
 		this.contact = null;
 	}
 
+	async editContact(id) {
+		if (typeof id !== 'string') return;
+
+		this.isValid();
+
+		if (this.errors.length > 0) return;
+
+		this.contact = await ContactModel.findByIdAndUpdate(id, this.body, { new: true });
+	}
+
 	static async searchId(id) {
 		if (typeof id !== 'string') return;
 		const contactId = await ContactModel.findById(id);

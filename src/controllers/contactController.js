@@ -29,7 +29,7 @@ exports.register = async (req, res) => {
 	}
 };
 
-exports.edit = async (req, res) => {
+exports.idContact = async (req, res) => {
 	if (!req.params.id) return res.render('404');
 
 	const contactDb = await Contact.searchId(req.params.id);
@@ -37,4 +37,32 @@ exports.edit = async (req, res) => {
 	if (!contactDb) return res.render('404');
 
 	res.render('contact', { contactDb });
+};
+
+exports.editContact = async (req, res) => {
+	try {
+		if (!req.params.id) return res.render('404');
+
+		const newContactEdit = new Contact(req.body);
+
+		await newContactEdit.editContact(req.params.id);
+
+		if (newContactEdit.errors.length > 0) {
+			req.flash('messagesErrors', newContactEdit.errors);
+			req.session.save(() => {
+				res.redirect(`../${req.params.id}`);
+				return;
+			});
+			return;
+		}
+
+		req.flash('messagesSuccess', 'O contato foi editado com sucesso.');
+		req.session.save(() => {
+			res.redirect(`/contact/${newContactEdit.contact._id}`);
+			return;
+		});
+	} catch (e) {
+		console.log(e);
+		res.render('404');
+	}
 };
