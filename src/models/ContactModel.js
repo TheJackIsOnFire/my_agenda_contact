@@ -28,12 +28,6 @@ class Contact {
 		this.contact = await ContactModel.findByIdAndUpdate(id, this.body, { new: true });
 	}
 
-	static async searchId(id) {
-		if (typeof id !== 'string') return;
-		const contactId = await ContactModel.findById(id);
-		return contactId;
-	}
-
 	//Valida os dados e envia para o banco de dados do mongoose
 	async registerContact() {
 		this.isValid();
@@ -77,6 +71,25 @@ class Contact {
 				telephone: this.body.telephone,
 			};
 		}
+	}
+
+	//Métodos estáticos
+	static async searchId(id) {
+		if (typeof id !== 'string') return;
+		const contactId = await ContactModel.findById(id);
+		return contactId;
+	}
+
+	//Busca os contatos no banco de dados e os ordena pela data e criação
+	static async searchContacts() {
+		const contacts = await ContactModel.find().sort({ createdIn: -1 });
+		return contacts;
+	}
+
+	static async deleteContact(id) {
+		if (typeof id !== 'string') return;
+		const contactDelete = await ContactModel.findOneAndDelete({ _id: id });
+		return contactDelete;
 	}
 }
 
